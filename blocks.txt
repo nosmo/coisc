@@ -1,0 +1,4 @@
+malwaredomains https://mirror1.malwaredomains.com/files/justdomains
+abuse.ch https://zeustracker.abuse.ch/blocklist.php?download=domainblocklist
+disconnect_track https://s3.amazonaws.com/lists.disconnect.me/simple_tracking.txt
+disconncet_ad https://s3.amazonaws.com/lists.disconnect.me/simple_ad.txt
