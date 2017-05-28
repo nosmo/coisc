@@ -20,6 +20,7 @@ Currently supported formats
 --------
 * ```/etc/hosts``` style
 * [dnsmasq](http://www.thekelleys.org.uk/dnsmasq/doc.html) ```address``` entries
+* bind A records
 
 Caveats
 --------

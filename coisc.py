@@ -67,9 +67,13 @@ def format_dnsmasq(redirect_ip, domain):
 def format_hosts(redirect_ip, domain):
     return "%s\t%s\n" % (redirect_ip, domain)
 
+def format_bind(redirect_ip, domain):
+    return "%s.\tIN\tA\t%s\n" % (domain, redirect_ip)
+
 OUTPUT_DICT = {
     "dnsmasq": format_dnsmasq,
-    "hosts": format_hosts
+    "hosts": format_hosts,
+    "bind": format_bind
 }
 
 def urlfile_to_dict(file_path):
