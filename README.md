@@ -13,7 +13,7 @@ Example use
 Configuration
 --------
 Block sources can be added by including them in the ```blocks*.txt```
-files. ```blocks-hosts_tyle.txt``` is specifically for sites that host
+files. ```blocks-hosts_style.txt``` is specifically for sites that host
 lists in hosts-file notation (ie with an IP address provided),
 
 Currently supported formats
