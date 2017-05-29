@@ -1,2 +1,3 @@
 sysctl http://sysctl.org/cameleon/hosts
 hostfilenet https://hosts-file.net/ad_servers.txt
+adaway https://adaway.org/hosts.txt
