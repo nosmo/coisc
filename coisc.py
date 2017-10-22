@@ -74,12 +74,31 @@ def format_dnsmasq(redirect_ip, domain):
     return "address=/%s/%s\n" % (domain, redirect_ip)
 
 
+def extract_dnsmasq(record_string):
+    return record_string.strip().split("/")[1]
+
+
 def format_hosts(redirect_ip, domain):
     return "%s\t%s\n" % (redirect_ip, domain)
 
 
+def extract_hosts(record_string):
+    return record_string.split()[1]
+
+
 def format_bind(redirect_ip, domain):
     return "%s.\tIN\tA\t%s\n" % (domain, redirect_ip)
+
+
+def extract_bind(record_string):
+    return record_string.split()[0]
+
+
+EXTRACT_DICT = {
+    "dnsmasq": extract_dnsmasq,
+    "hosts": extract_hosts,
+    "bind": extract_bind
+}
 
 OUTPUT_DICT = {
     "dnsmasq": format_dnsmasq,
@@ -107,7 +126,7 @@ def main(output_format, output_path, add_mode):
     existing_list = []
     if os.path.exists(output_path):
         with open(output_path, "r") as output_f:
-            #TODO support more than hosts file format
+            extract_function = EXTRACT_DICT[output_format]
             existing_list = [ i.strip().split()[1] for i in output_f.read().split("\n") \
                               if i.strip() ]
 
