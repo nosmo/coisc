@@ -1,6 +1,9 @@
 #!/usr/bin/env python
 
 import argparse
+import os.path
+import sys
+
 import requests
 
 # urls that have hostsfile-style notation
@@ -47,6 +50,7 @@ def filter_url_list(url_name, url_list, ip_provided):
 
     return filtered_list
 
+
 def process_url_dict(url_dict, ip_provided):
     """Download and process a label:url dict of URLs containing blocks.
 
@@ -59,13 +63,18 @@ def process_url_dict(url_dict, ip_provided):
         if downloaded_req.ok:
             downloaded_list = downloaded_req.text.strip().split("\n")
             filtered_list = filter_url_list(label, downloaded_list, ip_provided)
+        else:
+            sys.stderr.write("Failed to download URL %s: %s" % (url, downloaded_req.text))
     return filtered_list
+
 
 def format_dnsmasq(redirect_ip, domain):
     return "address=/%s/%s\n" % (domain, redirect_ip)
 
+
 def format_hosts(redirect_ip, domain):
     return "%s\t%s\n" % (redirect_ip, domain)
+
 
 def format_bind(redirect_ip, domain):
     return "%s.\tIN\tA\t%s\n" % (domain, redirect_ip)
@@ -86,17 +95,30 @@ def urlfile_to_dict(file_path):
                 url_dict[url_label] = url
     return url_dict
 
-def main(output_format, output_path):
+def main(output_format, output_path, add_mode):
     full_domain_list = []
     full_domain_list += process_url_dict(urlfile_to_dict(HOST_FILE_URLS), True)
     full_domain_list += process_url_dict(urlfile_to_dict(NONHOST_FILE_URLS), False)
     print "Got %d entries" % len(full_domain_list)
     print "Of which %d were duplicates" % (len(full_domain_list) - len(set(full_domain_list)))
 
+    existing_list = []
+    if os.path.exists(output_path):
+        with open(output_path, "r") as output_f:
+            #TODO support more than hosts file format
+            existing_list = [ i.strip().split()[1] for i in output_f.read().split("\n") \
+                              if i.strip() ]
+
+    if add_mode:
+        full_domain_list = set(full_domain_list + existing_list)
+
     with open(output_path, "w") as output_f:
         for domain in full_domain_list:
             output_f.write(OUTPUT_DICT[output_format](REDIRECT_IP, domain))
     print "Complete - wrote using %s format to %s" % (output_format, output_path)
+    if not add_mode and existing_list and existing_list != full_domain_list:
+        print "Added %d entries" % len(set(full_domain_list).difference(existing_list))
+        print "Removed %d entries" % len(set(existing_list).difference(full_domain_list))
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
@@ -105,6 +127,8 @@ if __name__ == "__main__":
                         help="Where to write output", required=True)
     parser.add_argument("--format", "-f", dest="output_format", action="store", default="hosts",
                         help="Format to write output using", choices=OUTPUT_DICT.keys())
+    parser.add_argument("--add", "-a", dest="add", action="store_true", default=False,
+                        help="Don't remove any lines, only add new ones")
     args = parser.parse_args()
 
-    main(args.output_format, args.output_path)
+    main(args.output_format, args.output_path, args.add)
