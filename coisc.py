@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python
 
 import argparse
 import os.path
@@ -13,7 +13,8 @@ HOST_FILE_URLS = "blocks-hosts_style.txt"
 NONHOST_FILE_URLS = "blocks.txt"
 
 # IPs in a hosts file to consider safe
-SAFE_IPS = ["0.0.0.0", "127.0.0.1", "255.255.255.255", "::1"]
+SAFE_IPS = ["0.0.0.0", "127.0.0.1", "255.255.255.255", "::1",
+            "fe00::0", "ff00::0", "ff02::1", "ff02::2", "ff02::3"]
 
 # filter some words out of domains - we can write these ourselves
 FILTER_DOMAIN = ["localhost", "localhost.localdomain"]
@@ -41,6 +42,10 @@ def filter_url_list(url_name, url_list, ip_provided):
             # fix up lines that "have comments # here"
             url = url.partition("#")[0]
         if ip_provided:
+            url_split = url.split()
+            if len(url_split) > 2:
+                continue
+
             ip, hostname = [ i.strip() for i in url.split() ]
 
             if ip not in SAFE_IPS:
