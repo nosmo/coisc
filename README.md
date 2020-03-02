@@ -12,9 +12,23 @@ Example use
 
 Configuration
 --------
-Block sources can be added by including them in the ```blocks*.txt```
-files. ```blocks-hosts_style.txt``` is specifically for sites that host
-lists in hosts-file notation (ie with an IP address provided),
+Block sources can be added by including them in the ```blocks*.txt``` files. ```blocks-hosts_style.txt``` is specifically for sites that host lists in hosts-file notation (ie with an IP address provided).
+
+The `-D` flag can be used to write top-level blocks for domains based on the contents of a file. Domains are simply listed separated by newlines. Currently this functionality is only supported when using the dnsmasq output format. For example, a file named `domains.txt` containing
+```
+example.com
+example.edu
+```
+And processed with the command
+```
+./coisc.py -D blockdomains.txt  -o /tmp/dnsmasqblock --format dnsmasq
+```
+Will generate a file (`/tmp/dnsmasqblock`) containing (amongst other lines):
+```
+domain=/example.com/127.0.0.1
+domain=/example.edu/127.0.0.1
+```
+Which will block all subdomains of example.com and example.edu
 
 Currently supported formats
 --------
