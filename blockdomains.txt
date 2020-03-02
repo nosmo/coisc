@@ -1,0 +1,4 @@
+foursquare.com
+4sqi.com
+semanticlocation-pa.googleapis.com
+geolocation.onetrust.com
