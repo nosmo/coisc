@@ -1,0 +1,16 @@
+foursquare.com
+4sqi.com
+gs-loc.apple.com
+gs-loc-new.ls-apple.com.akadns.net
+gs-loc.ls-apple.com.akadns.net
+semanticlocation-pa.googleapis.com
+lcdn-locator.apple.com
+lcdn-locator.apple.com.akadns.net
+lcdn-locator-usuqo.apple.com.akadns.net
+geolocation.onetrust.com
+geo-prod.do.dsp.mp.microsoft.com
+geo.prod.do.dsp.mp.microsoft.com
+geo-prod.dodsp.mp.microsoft.com.nsatc.net
+geo.query.yahoo.com
+geo.yahoo.com
+geoedge.com
