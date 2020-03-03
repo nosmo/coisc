@@ -28,7 +28,9 @@ Will generate a file (`/tmp/dnsmasqblock`) containing (amongst other lines):
 domain=/example.com/127.0.0.1
 domain=/example.edu/127.0.0.1
 ```
-Which will block all subdomains of example.com and example.edu
+Which will block all subdomains of example.com and example.edu.
+
+A brief list of location tracking/marketing is available in the file `location_services_domains.txt`.
 
 Currently supported formats
 --------
