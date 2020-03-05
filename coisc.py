@@ -96,14 +96,20 @@ def format_dnsmasq(redirect_ip, domain):
 
 
 def extract_dnsmasq(record_string):
+    """Domain and subdomain-wide block for a domain using dnsmasq
+    """
     return record_string.strip().split("/")[1]
 
 
 def format_hosts(redirect_ip, domain):
+    """Domain-wide block for a domain using hostsfile
+    """
     return "{}\t{}\n".format(redirect_ip, domain)
 
 
 def extract_hosts(record_string):
+    """Extract hostname from a hostsfile line
+    """
     return record_string.split()[1]
 
 
@@ -116,10 +122,10 @@ def extract_bind(record_string):
 
 
 def domain_block_dnsmasq(redirect_ip, domain):
-    """Domain-wide block for a domain using dnsmasq
-    """
-
-    return "domain=/{}/{}\n".format(domain, redirect_ip)
+    # TODO this is now no longer different to any other dnsmasq block
+    # line so having this functionality here is overkill and
+    # redundant.
+    return "address=/{}/{}\n".format(domain, redirect_ip)
 
 
 def domain_block_hosts(redirect_ip, domain):
