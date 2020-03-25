@@ -1,10 +1,12 @@
 coisc
 ========
 
-coisc (Irish for "block") is a tool for generating advertising,
+Coisc (Irish for "block") is a tool for generating advertising,
 malware and tracking blocks on a level beyond the browser. The tool
 harvests blacklists over HTTP and writes out files to implement
 blocking in multiple formats.
+
+Coisc can be used to write a hosts file to block undesired hosts via /etc/hosts for a single computer, or to configure a DNS server that provides DNS for whole networks. For example, this functionality is ideal for blocking advertising and tracking hosts for every device on a home network, including devices that do not have native adblocking (iOS devices and others). This pattern also works on DNS servers for VPN clients for mobile devices etc.
 
 Example use
 --------
@@ -28,7 +30,7 @@ Will generate a file (`/tmp/dnsmasqblock`) containing (amongst other lines):
 domain=/example.com/127.0.0.1
 domain=/example.edu/127.0.0.1
 ```
-Which will block all subdomains of example.com and example.edu.
+Which will block the top level and all subdomains of example.com and example.edu.
 
 A brief list of location tracking/marketing is available in the file `location_services_domains.txt`.
 
