@@ -2,3 +2,9 @@ malwaredomains http://mirror1.malwaredomains.com/files/justdomains
 abuse.ch https://zeustracker.abuse.ch/blocklist.php?download=domainblocklist
 disconnect_track https://s3.amazonaws.com/lists.disconnect.me/simple_tracking.txt
 disconncet_ad https://s3.amazonaws.com/lists.disconnect.me/simple_ad.txt
+antisocial https://theantisocialengineer.com/AntiSocial_Blacklist_Community_V1.txt
+joewein https://joewein.net/dl/bl/dom-bl-base.txt
+antisocial https://theantisocialengineer.com/AntiSocial_Blacklist_Community_V1.txt
+rpi_easylist https://raw.githubusercontent.com/RPiList/specials/master/Blocklisten/easylist
+threatshub_ads https://bitbucket.org/threatshub/th-dfbase/raw/master/data/ads/ThreatsHub_Adservers_DataFeed
+threatshub_spyware https://bitbucket.org/threatshub/th-dfbase/raw/master/data/spyware/ThreatsHub_Spyware_DataFeed

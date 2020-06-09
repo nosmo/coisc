@@ -7,6 +7,7 @@ Generate a list of DNS blocks for a given set of hosts.
 
 import argparse
 import os.path
+import re
 import sys
 
 import requests
@@ -38,19 +39,28 @@ class UnsupportedFormat(Exception):
 
 
 def filter_url_list(url_name, url_list, ip_provided):
-    """Filter a list of URLs to remove comments.
+    """Filter a list of URLs to remove comments and other things we don't
+      want.
 
      url_name: a label to identify the list
      url_list: a list of URL strings
      ip_provided: is the IP provided each line?
+
     """
 
     filtered_list = []
+
+    ip_regexp = re.compile("^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$")
 
     for url in url_list:
         url = url.strip()
         if url.startswith("#") or not url:
             continue
+
+        if ip_regexp.match(url):
+            sys.stderr.write(" - Found IP address {} when we expected a domain. Skipping\n".format(
+                url))
+
         if "#" in url:
             # fix up lines that "have comments # here"
             url = url.partition("#")[0]
@@ -62,8 +72,9 @@ def filter_url_list(url_name, url_list, ip_provided):
             ip, hostname = [ i.strip() for i in url.split() ]
 
             if ip not in SAFE_IPS:
-                print("WARNING!! Unsafe IP found in file {}: {}".format(
+                sys.stderr.write("WARNING!! Unsafe IP found in file {}: {}\n".format(
                     url_name, url))
+                #TODO systemexit here is extreme
                 raise SystemExit
         else:
             hostname = url
@@ -78,16 +89,19 @@ def process_url_dict(url_dict, ip_provided):
      url_dict: a label:url dict of URLs
      ip_provided: is the IP provided each line? (/etc/hosts style)
     """
+    full_list = []
     for label, url in url_dict.items():
         print("Processing %s" % label)
-        downloaded_req = requests.get(url, headers={"User-Agent": USER_AGENT})
-        if downloaded_req.ok:
-            downloaded_list = downloaded_req.text.strip().split("\n")
-            filtered_list = filter_url_list(label, downloaded_list,
-                                            ip_provided)
-        else:
-            sys.stderr.write("Failed to download URL {}: {}\n".format(url, downloaded_req.text))
-    return filtered_list
+        try:
+            downloaded_req = requests.get(url, headers={"User-Agent": USER_AGENT})
+        except requests.exceptions.RequestException as exc:
+            sys.stderr.write("{}: Failed to download URL {}\n".format(label, url))
+
+        downloaded_list = downloaded_req.text.strip().split("\n")
+        filtered_list = filter_url_list(label, downloaded_list,
+                                        ip_provided)
+        full_list += filtered_list
+    return full_list
 
 
 # TODO make these their own class
@@ -186,13 +200,13 @@ def main(output_format, output_path, add_mode, domain_block_files):
 
     full_domain_list += process_url_dict(urlfile_to_dict(HOST_FILE_URLS), True)
     full_domain_list += process_url_dict(urlfile_to_dict(NONHOST_FILE_URLS), False)
+    print("\nFinished processing")
     print("Got %d entries" % len(full_domain_list))
     print("Of which %d were duplicates" % (len(full_domain_list) - len(set(full_domain_list))))
 
     existing_list = []
     if os.path.exists(output_path):
         with open(output_path, "r") as output_f:
-            # TODO this function isn't called - why?
             extract_function = EXTRACT_DICT[output_format]
             existing_list = [extract_function(i.strip())
                              for i in output_f.read().split("\n")
@@ -225,7 +239,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(
         description='Generate system-level advertising/malware blocklists')
     parser.add_argument("--domainlist", "-D", dest="domain_blocks", action="store", default="",
-                        help="File to read domain blocks from", required=True, nargs='*')
+                        help="File to read manual domain blocks from", required=False, nargs='*')
     parser.add_argument("--output", "-o", dest="output_path", action="store", default="",
                         help="Where to write output", required=True)
     parser.add_argument("--format", "-f", dest="output_format", action="store", default="hosts",

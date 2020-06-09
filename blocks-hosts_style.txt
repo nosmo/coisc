@@ -1,4 +1,4 @@
 sysctl http://sysctl.org/cameleon/hosts
-hostfilenet https://hosts-file.net/ad_servers.txt
 adaway https://adaway.org/hosts.txt
 someonewhocares http://someonewhocares.org/hosts/hosts
+malwaredomainlist https://www.malwaredomainlist.com/hostslist/hosts.txt
